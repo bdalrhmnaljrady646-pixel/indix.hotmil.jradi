@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>متجر الجرادي - تطبيق رسمي</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>body{font-family:Tajawal, sans-serif;background:#0a1f12}</style>
+</head>
+<body class="text-white pb-32">
+<header class="bg-[#0a4d2e] p-4 border-b-4 border-yellow-500 sticky top-0 z-20">
+<div class="flex items-center justify-between">
+<div id="logoArea" class="flex items-center gap-2 cursor-pointer">
+<div class="w-14 h-14 rounded-xl bg-yellow-400 text-green-900 flex items-center justify-center font-bold text-xl">ج</div>
+<div><h1 class="font-bold text-yellow-300">متجر الجرادي</h1><p class="text-xs text-yellow-100">ثقة تبدأ من المصدر</p></div>
+</div>
+<button id="cartBtn" class="bg-yellow-400 text-green-900 px-4 py-2 rounded-full font-bold">🛒 <span id="cartCount">0</span></button>
+</div>
+<div id="adBox" class="hidden mt-3 bg-yellow-400 text-green-900 p-3 rounded-xl font-bold text-center"></div>
+<div class="grid grid-cols-2 gap-2 mt-3">
+<button id="copyBtn" class="bg-white text-green-900 py-2 rounded-xl text-xs font-bold">🔗 نسخ الرابط الرسمي</button>
+<button id="shareBtn" class="bg-green-600 text-white py-2 rounded-xl text-xs font-bold">📢 مشاركة واتساب</button>
+</div>
+</header>
+
+<div id="adEdit" class="hidden m-3 p-3 bg-white/10 rounded-xl">
+<textarea id="adInput" rows="2" class="w-full p-2 rounded text-black font-bold text-sm" placeholder="اكتب إعلانك هنا"></textarea>
+<button id="saveAdBtn" class="mt-2 w-full bg-yellow-400 text-green-900 py-2 rounded-xl font-bold">حفظ الإعلان</button>
+</div>
+
+<div id="grid" class="p-3 grid grid-cols-2 gap-3"></div>
+
+<div id="addArea" class="hidden p-3">
+<button id="addBtn" class="w-full bg-yellow-400 text-green-900 py-3 rounded-xl font-bold">+ إضافة منتج</button>
+<button id="exitEditBtn" class="w-full mt-2 bg-white/20 py-2 rounded-xl">خروج من التعديل</button>
+</div>
+
+<footer class="text-center p-4 text-white/20 text-xs">متجر الجرادي © 2025</footer>
+
+<div id="cartDrawer" class="hidden fixed inset-0 bg-black/70 z-30">
+<div class="bg-white text-black w-[90%] max-w-sm h-full mr-auto p-4 overflow-auto">
+<div class="flex justify-between"><h2 class="font-bold text-lg">🛒 السلة</h2><button id="closeCart" class="text-2xl">✕</button></div>
+<div id="cartList" class="mt-3"></div>
+<div class="mt-4 border-t pt-3">
+<div class="font-bold">الإجمالي: <span id="total">0</span> ر.ي</div>
+<a id="checkoutLink" href="#" target="_blank" class="block mt-3 w-full bg-green-600 text-white text-center py-4 rounded-xl font-bold">إرسال الطلب واتساب 📱</a>
+<button id="clearCart" class="w-full mt-2 bg-gray-200 py-2 rounded-xl">إفراغ السلة</button>
+</div>
+</div>
+</div>
+
+<div id="pwdBox" class="hidden fixed inset-0 bg-black/80 z-40 flex items-center justify-center p-6">
+<div class="bg-white text-black p-6 rounded-2xl w-full max-w-sm">
+<h3 class="font-bold text-center mb-3">كلمة السر</h3>
+<input id="pwdIn" type="password" class="w-full p-3 border-2 border-yellow-500 rounded-xl" placeholder="••••">
+<div class="grid grid-cols-2 gap-2 mt-4"><button id="pwdCancel" class="bg-gray-200 py-2 rounded-xl">إلغاء</button><button id="pwdOk" class="bg-yellow-400 py-2 rounded-xl font-bold">دخول</button></div>
+</div>
+</div>
+
+<div id="prodBox" class="hidden fixed inset-0 bg-black/80 z-40 overflow-auto p-4">
+<div class="bg-white text-black p-4 rounded-2xl max-w-md mx-auto mt-6">
+<h3 id="prodTitle" class="font-bold text-center mb-3">منتج</h3>
+<input id="pName" class="w-full p-3 border rounded-xl mb-2 font-bold" placeholder="اسم المنتج">
+<input id="pPrice" type="number" class="w-full p-3 border rounded-xl mb-2 font-bold" placeholder="السعر ر.ي">
+<input id="pDesc" class="w-full p-3 border rounded-xl mb-2" placeholder="وصف">
+<div class="border-2 border-dashed rounded-xl p-3 text-center bg-gray-50">
+<img id="imgPrev" class="hidden max-h-40 mx-auto rounded-xl mb-2">
+<span id="imgPh" class="text-gray-400 text-sm">لا صورة</span>
+<input type="file" id="fileIn" accept="image/*" class="hidden">
+</div>
+<button id="chooseImg" class="w-full mt-2 bg-yellow-400 text-green-900 py-3 rounded-xl font-bold">📷 اختر صورة من المعرض</button>
+<button id="delImg" class="w-full mt-1 bg-red-100 text-red-600 py-2 rounded-xl text-sm">❌ حذف الصورة</button>
+<div class="grid grid-cols-2 gap-2 mt-4"><button id="prodCancel" class="bg-gray-200 py-2 rounded-xl">إلغاء</button><button id="prodSave" class="bg-yellow-400 py-2 rounded-xl font-bold">حفظ</button></div>
+</div>
+</div>
+
+<div id="toast" class="hidden fixed bottom-20 left-1/2 -translate-x-1/2 bg-green-800 text-white px-6 py-2 rounded-full font-bold z-50"></div>
+
+<script>
+const WA_NUM = "967785513291";
+let products = JSON.parse(localStorage.getItem('jaradi_v5')||'null');
+let cart = JSON.parse(localStorage.getItem('jaradi_cart_v5')||'[]');
+let editMode=false, editIdx=-1, curImg="", tap=0, tapT=null;
+let adText = localStorage.getItem('jaradi_ad_v5')||"";
+
+const defaults = [
+{name:"لمبة طارد النامس الجرادي",price:1500,desc:"LED تطرد النامس - صيني أصلي",emoji:"💡",imageData:""},
+{name:"صاعق الناموس الكهربائي",price:8500,desc:"30 وات يحمي البيت كامل",emoji:"⚡",imageData:""},
+{name:"مضرب ناموس شحن USB",price:4500,desc:"مع قاعدة LED",emoji:"🏸",imageData:""},
+{name:"جهاز بخار طارد النامس",price:3500,desc:"مع 2 غيار - آمن",emoji:"🔌",imageData:""},
+{name:"صابون البابايا Mena",price:800,desc:"لبشرة أكثر إشراقا",emoji:"🧼",imageData:""},
+{name:"فازلين مرطب",price:500,desc:"مرطب",emoji:"🧴",imageData:""},
+{name:"شامبو أكياس",price:100,desc:"كيس",emoji:"💧",imageData:""},
+{name:"كلور منظف",price:600,desc:"منظف قوي",emoji:"🧹",imageData:""},
+{name:"تايد كيس",price:300,desc:"غسيل",emoji:"🧼",imageData:""},
+{name:"كريم الجرادي للتجميل",price:5500,desc:"تفتيح وترطيب",emoji:"✨",imageData:""}
+];
+
+function init(){
+if(!products){products=defaults; saveProd();}
+if(adText){const b=document.getElementById('adBox');b.innerText=adText;b.classList.remove('hidden');document.getElementById('adInput').value=adText;}
+render(); updCart();
+document.getElementById('logoArea').addEventListener('click',()=>{tap++;clearTimeout(tapT);tapT=setTimeout(()=>tap=0,800);if(tap>=3){tap=0;document.getElementById('pwdBox').classList.remove('hidden');}});
+document.getElementById('cartBtn').onclick=openCart;
+document.getElementById('closeCart').onclick=()=>document.getElementById('cartDrawer').classList.add('hidden');
+document.getElementById('copyBtn').onclick=copyLink;
+document.getElementById('shareBtn').onclick=shareWA;
+document.getElementById('saveAdBtn').onclick=saveAd;
+document.getElementById('addBtn').onclick=()=>openProd(-1);
+document.getElementById('exitEditBtn').onclick=exitEdit;
+document.getElementById('pwdCancel').onclick=()=>document.getElementById('pwdBox').classList.add('hidden');
+document.getElementById('pwdOk').onclick=checkPwd;
+document.getElementById('prodCancel').onclick=()=>document.getElementById('prodBox').classList.add('hidden');
+document.getElementById('prodSave').onclick=saveProdItem;
+document.getElementById('chooseImg').onclick=()=>document.getElementById('fileIn').click();
+document.getElementById('delImg').onclick=clearImg;
+document.getElementById('fileIn').onchange=handleFile;
+document.getElementById('clearCart').onclick=()=>{cart=[];saveCart();renderCart();updCart();};
+}
+
+function handleFile(e){
+const file=e.target.files[0]; if(!file) return;
+const reader=new FileReader();
+reader.onload=ev=>{
+const img=new Image();
+img.onload=()=>{
+const c=document.createElement('canvas'); let w=img.width,h=img.height; const max=600; if(w>max){h=h*max/w; w=max;} c.width=w;c.height=h; c.getContext('2d').drawImage(img,0,0,w,h);
+curImg=c.toDataURL('image/jpeg',0.6);
+document.getElementById('imgPrev').src=curImg; document.getElementById('imgPrev').classList.remove('hidden'); document.getElementById('imgPh').classList.add('hidden');
+toast('تم اختيار الصورة');
+};
+img.src=ev.target.result;
+};
+reader.readAsDataURL(file); e.target.value='';
+}
+function clearImg(){curImg=''; document.getElementById('imgPrev').classList.add('hidden'); document.getElementById('imgPh').classList.remove('hidden');}
+
+function render(){
+const g=document.getElementById('grid'); g.innerHTML='';
+products.forEach((p,i)=>{
+const has=p.imageData&&p.imageData.length>20;
+const imgH=has?`<img src="${p.imageData}" class="w-full h-28 object-contain bg-white rounded-xl">`:`<div class="text-4xl text-center py-6 bg-white rounded-xl">${p.emoji||'📦'}</div>`;
+const editH=editMode?`<div class="grid grid-cols-2 gap-1 mt-2"><button class="editB bg-yellow-400 text-[10px] py-2 rounded font-bold" data-i="${i}">تعديل</button><button class="delB bg-red-500 text-white text-[10px] py-2 rounded" data-i="${i}">حذف</button></div>`:'';
+g.innerHTML+=`<div class="bg-white text-black rounded-2xl p-2 border-2 border-yellow-400"><div class="cursor-pointer" data-order="${i}">${imgH}<h3 class="font-bold text-xs mt-2 truncate">${p.name}</h3><p class="text-[10px] text-gray-500 truncate">${p.desc||''}</p><div class="font-bold text-green-700 text-sm mt-1">${p.price} ر.ي</div></div><button class="addCartB w-full mt-2 bg-[#0a4d2e] text-yellow-300 py-2 rounded-xl text-xs font-bold" data-add="${i}">🛒 أضف للسلة</button>${editH}</div>`;
+});
+document.querySelectorAll('[data-order]').forEach(el=>{el.onclick=()=>orderWA(parseInt(el.dataset.order));});
+document.querySelectorAll('[data-add]').forEach(el=>{el.onclick=(e)=>{e.stopPropagation(); addCart(parseInt(el.dataset.add));};});
+document.querySelectorAll('.editB').forEach(el=>{el.onclick=(e)=>{e.stopPropagation(); openProd(parseInt(el.dataset.i));};});
+document.querySelectorAll('.delB').forEach(el=>{el.onclick=(e)=>{e.stopPropagation(); delProd(parseInt(el.dataset.i));};});
+}
+function addCart(i){const ex=cart.find(c=>c.i===i); if(ex) ex.qty++; else cart.push({i,qty:1}); saveCart(); updCart(); toast('أضيف للسلة');}
+function updCart(){document.getElementById('cartCount').innerText=cart.reduce((s,c)=>s+c.qty,0);}
+function saveCart(){localStorage.setItem('jaradi_cart_v5',JSON.stringify(cart));}
+function openCart(){renderCart(); document.getElementById('cartDrawer').classList.remove('hidden');}
+function renderCart(){
+const list=document.getElementById('cartList'); list.innerHTML=''; let total=0;
+cart.forEach((c,idx)=>{
+const p=products[c.i]; if(!p) return; const sub=p.price*c.qty; total+=sub;
+list.innerHTML+=`<div class="flex items-center gap-2 border-b py-2"><div class="flex-1"><div class="font-bold text-xs">${p.name}</div><div class="text-xs">${p.price} × ${c.qty} = ${sub}</div></div><button onclick="cart[${idx}].qty++;saveCart();renderCart();updCart()" class="bg-gray-200 w-6 h-6 rounded">+</button><span class="text-xs mx-1">${c.qty}</span><button onclick="if(cart[${idx}].qty>1){cart[${idx}].qty--;}else{cart.splice(${idx},1);}saveCart();renderCart();updCart()" class="bg-gray-200 w-6 h-6 rounded">-</button></div>`;
+});
+document.getElementById('total').innerText=total;
+let txt="السلام عليكم متجر الجرادي - طلب جديد:\n";
+cart.forEach(c=>{const p=products[c.i]; const sub=p.price*c.qty; txt+=`- ${p.name} × ${c.qty} = ${sub} ر.ي\n`;});
+txt+=`\nالإجمالي: ${total} ر.ي`;
+const encoded = encodeURIComponent(txt);
+document.getElementById('checkoutLink').href=`https://wa.me/${WA_NUM}?text=${encoded}`;
+document.getElementById('checkoutLink').onclick = function(e){ e.preventDefault(); sendWA(txt); };
+}
+function sendWA(text){
+const encoded = encodeURIComponent(text);
+const waUrl = `https://wa.me/${WA_NUM}?text=${encoded}`;
+navigator.clipboard.writeText(text).catch(()=>{});
+try{ window.open(waUrl, '_blank'); }catch(err){ window.location.href = waUrl; }
+setTimeout(()=>{ toast('تم نسخ الطلب - الصقه في واتساب'); }, 800);
+}
+function orderWA(i){
+const p=products[i]; const t=`أريد: ${p.name} بسعر ${p.price} ر.ي`; sendWA(t);
+}
+function checkPwd(){if(document.getElementById('pwdIn').value==='2025'){editMode=true; document.getElementById('pwdBox').classList.add('hidden'); document.getElementById('adEdit').classList.remove('hidden'); document.getElementById('addArea').classList.remove('hidden'); render(); toast('تم تفعيل التعديل');} else alert('خطأ');}
+function exitEdit(){editMode=false; document.getElementById('adEdit').classList.add('hidden'); document.getElementById('addArea').classList.add('hidden'); render();}
+function openProd(i){editIdx=i; const box=document.getElementById('prodBox'); box.classList.remove('hidden'); if(i>=0){const p=products[i]; document.getElementById('prodTitle').innerText='تعديل منتج'; document.getElementById('pName').value=p.name; document.getElementById('pPrice').value=p.price; document.getElementById('pDesc').value=p.desc||''; curImg=p.imageData||''; if(curImg){document.getElementById('imgPrev').src=curImg; document.getElementById('imgPrev').classList.remove('hidden'); document.getElementById('imgPh').classList.add('hidden');} else clearImg();} else {document.getElementById('prodTitle').innerText='إضافة منتج'; document.getElementById('pName').value=''; document.getElementById('pPrice').value=''; document.getElementById('pDesc').value=''; clearImg();}}
+function saveProdItem(){const name=document.getElementById('pName').value.trim(); const price=parseInt(document.getElementById('pPrice').value); if(!name||!price){alert('اسم وسعر');return;} const obj={name,price,desc:document.getElementById('pDesc').value,emoji:'📦',imageData:curImg}; if(editIdx>=0) products[editIdx]=obj; else products.unshift(obj); saveProd(); render(); document.getElementById('prodBox').classList.add('hidden'); toast('تم الحفظ');}
+function delProd(i){if(!confirm('حذف المنتج؟'))return; products.splice(i,1); cart=cart.filter(c=>c.i!==i).map(c=>{if(c.i>i)c.i--;return c;}); saveProd(); saveCart(); render(); updCart(); toast('تم الحذف');}
+function saveProd(){localStorage.setItem('jaradi_v5',JSON.stringify(products));}
+function saveAd(){adText=document.getElementById('adInput').value; localStorage.setItem('jaradi_ad_v5',adText); const b=document.getElementById('adBox'); b.innerText=adText; b.classList.toggle('hidden',!adText); toast('تم حفظ الإعلان');}
+function copyLink(){navigator.clipboard.writeText(location.href).then(()=>toast('تم نسخ الرابط الرسمي')).catch(()=>prompt('انسخ:',location.href));}
+function shareWA(){const t=(adText?adText+'\n':'')+location.href; const enc=encodeURIComponent(t); window.open('https://wa.me/?text='+enc,'_blank');}
+function toast(m){const t=document.getElementById('toast'); t.innerText=m; t.classList.remove('hidden'); setTimeout(()=>t.classList.add('hidden'),2500);}
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
